@@ -1,0 +1,55 @@
+td {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    background-color: grey;
+    text-align: center;
+}
+tr {
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+.explodedMine {
+    background-color: red;
+}
+.flagged {
+    background-color: green;
+}
+
+.cleared {
+    background-color: cornsilk;
+}
+
+.mines0 {
+    color: transparent;
+}
+.mines1 {
+    color: blue;
+}
+.mines2 {
+    color: green;
+}
+.mines3 {
+    color: red;
+}
+.mines4 {
+    color: darkblue;
+}
+.mines5 {
+    color: brown;
+}
+.mines6 {
+    color: cyan;
+}
+.mines7 {
+    color: black;
+}
+.mines8 {
+    color: black;
+}
+.mines9 {
+    color: black;
+}
