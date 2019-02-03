@@ -19,13 +19,13 @@ class MineSquare {
 }
 
 class MineField {
-    constructor(height, width, mineCount, eventTarget=document) {
+    constructor(height, width, mineCount) {
         this.height = height;
         this.width = width;
         this.mineCount = mineCount;
         this.field = new Array(height);
-        this.eventTarget = eventTarget;
         this.gameOver = false;
+        this.eventHandlers = {};
         
         for (let i = 0; i < height; i++ ) {
             this.field[i] = new Array(width);
@@ -64,9 +64,9 @@ class MineField {
         let square = this.getSquare(i, j);
         if (!square.visited && !square.isFlagged && !this.gameOver) {
             square.visited = true;
-            this.eventTarget.dispatchEvent(new CustomEvent("squareOpened", {detail: {pos: [i, j], square: square}}));
+            this.dispatchEvent("openSquare", [i, j], square);
             if (square.isMine) {
-                this.eventTarget.dispatchEvent(new CustomEvent("gameOver", {detail: this}));
+                this.dispatchEvent("gameOver");
                 this.gameOver = true;
             }
             if (square.neighboringMines == 0) {
@@ -74,6 +74,18 @@ class MineField {
                     this.check(ii, jj);
                 }
             }
+        }
+    }
+    on(eventName, func) {
+        if (this.eventHandlers[eventName] === undefined) {
+            this.eventHandlers[eventName] = [];
+        }
+        this.eventHandlers[eventName].push(func);
+    }
+    dispatchEvent(eventName, ...args) {
+        const funcs = this.eventHandlers[eventName] || [];
+        for (const func of funcs) {
+            func(...args);
         }
     }
     flag(i, j) {
@@ -101,14 +113,14 @@ function createField(mineField) {
             cell.addEventListener("click", clickHandler);
         }
     }
-    mineField.eventTarget.addEventListener("squareOpened", function(e) {
-        let [i, j] = e.detail.pos;
+    mineField.on("openSquare", (pos, square) => {
+        let [i, j] = pos;
         let cell = table.rows[i].cells[j];
-        updateCell(cell, e.detail.square);
+        updateCell(cell, square);
     });
-    mineField.eventTarget.addEventListener("gameOver", function(e) {
+    mineField.on("gameOver", () => {
         alert("Game over!");
-    })
+    });
     return table;
 }
 
